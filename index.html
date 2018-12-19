@@ -1,10 +1,94 @@
 <!DOCTYPE html>
 <html style="height: 100%">
+
    <head>
        <meta charset="utf-8">
+       <style type="text/css">
+			#bodydiv {
+			filter:alpha(opacity=50);  
+			-moz-opacity:0.5;  
+			-khtml-opacity: 0.5;  
+			opacity: 0.8;
+			left:0px; top:0px;
+			height:100%;
+			width:100%;
+			position:absolute;
+			background-size: 100%;
+			background:url("https://cdna.artstation.com/p/assets/images/images/009/072/800/large/paul-chadeisson-testspeed-0200b.jpg");
+			}
+			#bodydiv #text {
+				font-size:30px;
+				position:absolute;
+				top:40%;
+				left:40%;
+				text-align:center;
+			}
+			#bodydiv #rect {
+				position:absolute;
+				top:80%;
+				left:80%;
+			}
+		</style>
    </head>
-   <body style="height: 100%; margin: 0">
-       <div id="container" style="height: 100%">Hello</div>
 
+   <body>
+   	<script type="text/javascript"> //data
+   		bgm_pre = "http://music.163.com/song/media/outer/url?id="
+   		bgm_ls = new Array();
+   		bgm_ls = [bgm_pre+"1329897775.mp3",bgm_pre+"514211636.mp3",bgm_pre+"17967370.mp3"]
+
+   		bg_pic = new Array();
+   		bg_pic = 
+   		["https://cdna.artstation.com/p/assets/images/images/009/072/800/large/paul-chadeisson-testspeed-0200b.jpg",
+		"https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-714885.jpg"]
+   	</script>
+
+	<div id="bodydiv">
+		<audio id="myAudio" autoplay loop="false"></audio>
+
+		<svg id="rect">
+			<rect width="10" height="30" x="0" y="0" style="fill:lightblue;" onclick= "bgmplay()"/>
+			<rect width="10" height="30" x="0" y="30" style="fill:red;" onclick= "bgmstop()"/>
+		</svg>
+
+		<p id="text">
+			WELCOME TO ASOP <br/>
+			<font size="2">北野武 杨德昌</font> <br/>
+			<font size="2">Music</font>
+		</p>
+	</div>
+
+	<script>
+		//change bgm
+		var rand = {};
+		rand.get = function(begin,end){
+			return Math.floor(Math.random()*(end-begin))+begin;
+		}
+		var v = rand.get(1,bgm_ls.length)-1
+		console.log(v)
+		bgm = document.getElementById("myAudio")
+		bgm.volume = 0.2
+		bgm.src = bgm_ls[v]
+		function bgmplay(){
+	        bgm.play();
+	    }
+	    function bgmstop(){
+	        bgm.pause();
+	    }
+
+		//change background picture
+		var curIndex = 0;
+		var timeInterval = 20000;
+		
+		setInterval(changeImg, timeInterval);
+		function changeImg() {
+			if (curIndex == bg_pic.length - 1) {
+			curIndex = 0;
+			} else {
+			curIndex += 1;
+			}
+			document.getElementById("bodystyle").style.backgroundImage = "url("+bg_pic[curIndex]+")"
+		}
+	</script>
    </body>
 </html>
