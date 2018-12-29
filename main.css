@@ -1,0 +1,60 @@
+@keyframes blink{
+  0%{opacity: 1;}
+  100%{opacity: 0;} 
+}
+/* 添加兼容性前缀 */
+@-webkit-keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@-moz-keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@-ms-keyframes blink {
+    0% {opacity: 1; } 
+    100% { opacity: 0;}
+}
+@-o-keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.blink{
+    animation: blink 1s linear infinite;  
+    /* 其它浏览器兼容性前缀 */
+    -webkit-animation: blink 1s linear infinite;
+    -moz-animation: blink 1s linear infinite;
+    -ms-animation: blink 1s linear infinite;
+    -o-animation: blink 1s linear infinite;
+}
+
+#bodydiv {
+filter:alpha(opacity=50);  
+-moz-opacity:0.5;  
+-khtml-opacity: 0.5;  
+opacity: 0.8;
+left:0px; top:0px;
+height:100%;
+width:100%;
+position:absolute;
+background-size: 100%;
+background:url("https://cdna.artstation.com/p/assets/images/images/009/072/800/large/paul-chadeisson-testspeed-0200b.jpg");
+}
+#bodydiv #maintext {
+	font-size:30px;
+	position:absolute;
+	top:40%;
+	left:40%;
+	text-align:center;
+}
+#bodydiv #bgmtext {
+	position:absolute;
+	top:83%;
+	left:80%;
+	text-align:center;
+}
+#bodydiv #rect {
+	position:absolute;
+	top:80%;
+	left:80%;
+}

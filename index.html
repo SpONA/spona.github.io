@@ -3,83 +3,79 @@
 
    <head>
        <meta charset="utf-8">
-       <style type="text/css">
-			#bodydiv {
-			filter:alpha(opacity=50);  
-			-moz-opacity:0.5;  
-			-khtml-opacity: 0.5;  
-			opacity: 0.8;
-			left:0px; top:0px;
-			height:100%;
-			width:100%;
-			position:absolute;
-			background-size: 100%;
-			background:url("https://cdna.artstation.com/p/assets/images/images/009/072/800/large/paul-chadeisson-testspeed-0200b.jpg");
-			}
-			#bodydiv #text {
-				font-size:30px;
-				position:absolute;
-				top:40%;
-				left:40%;
-				text-align:center;
-			}
-			#bodydiv #rect {
-				position:absolute;
-				top:80%;
-				left:80%;
-			}
-		</style>
+       <link rel="stylesheet" href="main.css">
+       <script src="data.js"></script>
    </head>
 
    <body>
-   	<script type="text/javascript"> //data
-   		bgm_pre = "http://music.163.com/song/media/outer/url?id="
-   		bgm_ls = new Array();
-   		bgm_ls = [bgm_pre+"1329897775.mp3",bgm_pre+"514211636.mp3",bgm_pre+"17967370.mp3"]
-
-   		bg_pic = new Array();
-   		bg_pic = 
-   		["https://cdna.artstation.com/p/assets/images/images/009/072/800/large/paul-chadeisson-testspeed-0200b.jpg",
-		"https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-714885.jpg"]
-   	</script>
-
 	<div id="bodydiv">
-		<audio id="myAudio" autoplay loop="false"></audio>
+		<audio id="myAudio" loop="false"></audio>
 
 		<svg id="rect">
-			<rect width="10" height="30" x="0" y="0" style="fill:lightblue;" onclick= "bgmplay()"/>
-			<rect width="10" height="30" x="0" y="30" style="fill:red;" onclick= "bgmstop()"/>
+			<rect class = "blink" width="30" height="15" x="0" y="0" style="fill:lightblue" onclick="bgmplay()"/>
+			<rect class = "blink" width="30" height="15" x="0" y="20" style="fill:orange" onclick= "bgmstop()"/>
+			<rect class = "blink" width="30" height="15" x="40" y="0" style="fill:brown" onclick= "bgmnext()"/>
+			<rect class = "blink" width="30" height="15" x="40" y="20" style="fill:white" onclick= "bgmprev()"/>
 		</svg>
 
-		<p id="text">
+		<p id="maintext">
 			WELCOME TO ASOP <br/>
 			<font size="2">北野武 杨德昌</font> <br/>
 			<font size="2">Music</font>
 		</p>
-	</div>
 
-	<script>
+		<p id="bgmtext">
+			<marquee  direction="right"  behavior="alternate"  scrollamount="1"  width="140"scrolldelay="10"  loop="-1">
+				<text id = "bgmtext_txt" color="#000000" size="2"></text>
+			</marquee>
+		</p>
+
+	</div>
+	<canvas id="wrap" width="800" height="800"></canvas>
+	<script type="text/javascript">
+			
 		//change bgm
 		var rand = {};
 		rand.get = function(begin,end){
 			return Math.floor(Math.random()*(end-begin))+begin;
 		}
-		var v = rand.get(1,bgm_ls.length)-1
-		console.log(v)
+		var v = rand.get(1,bgm_ls_length)-1
+		var prev = v, next
 		bgm = document.getElementById("myAudio")
+		console.log(bgm)
+		bgm.src = bgm_pre+Object.values(bgm_dict)[v]+".mp3"
 		bgm.volume = 0.2
-		bgm.src = bgm_ls[v]
+		bgmtext = document.getElementById("bgmtext_txt")
+		bgmtext.innerHTML= Object.keys(bgm_dict)[v]
+		bgmtext.style.opacity="0"
+
 		function bgmplay(){
-	        bgm.play();
-	    }
-	    function bgmstop(){
-	        bgm.pause();
-	    }
+
+		    bgm.play();
+		    bgmtext.style.opacity="1"
+		}
+		function bgmstop(){
+		    bgm.pause();
+		    bgmtext.style.opacity="0"
+		}
+		function bgmnext(){
+			prev = rand.get(1,bgm_ls_length)-1
+			bgm.src = bgm_pre+Object.values(bgm_dict)[prev]+".mp3"
+		    bgmtext.innerHTML= Object.keys(bgm_dict)[prev]
+		    bgmtext.style.opacity="1"
+		    bgm.play();
+		}
+		function bgmprev(){
+			bgm.src = bgm_pre+Object.values(bgm_dict)[prev]+".mp3"
+		    bgmtext.innerHTML= Object.keys(bgm_dict)[prev]
+		    bgmplay()
+		}
+
 
 		//change background picture
 		var curIndex = 0;
-		var timeInterval = 20000;
-		
+		var timeInterval = 10000;
+
 		setInterval(changeImg, timeInterval);
 		function changeImg() {
 			if (curIndex == bg_pic.length - 1) {
@@ -87,8 +83,52 @@
 			} else {
 			curIndex += 1;
 			}
-			document.getElementById("bodystyle").style.backgroundImage = "url("+bg_pic[curIndex]+")"
+			document.getElementById("bodydiv").style.backgroundImage = "url("+bg_pic[curIndex]+")";
 		}
+
+	</script>
+	<input type="button" onclick="audio.play()" value="播放" />
+	<input type="button" onclick="audio.pause()" value="暂停" />
+	<script type="text/javascript">
+		var wrap = document.getElementById("wrap");
+	    var cxt = wrap.getContext("2d");
+	    //获取API
+	    var AudioContext = AudioContext || webkitAudioContext;
+	    var context = new AudioContext;
+	    //加载媒体
+	    var audio = new Audio("http://music.163.com/song/media/outer/url?id=514211636.mp3");
+	    //创建节点
+	    var source = context.createMediaElementSource(audio);
+	    var analyser = context.createAnalyser();
+	    //连接：source → analyser → destination
+	    source.connect(analyser);
+	    analyser.connect(context.destination);
+	    //创建数据
+	    var output = new Uint8Array(360);
+	    (function drawSpectrum() {
+	        analyser.getByteFrequencyData(output);//获取频域数据
+	        cxt.clearRect(0, 0, wrap.width, wrap.height);
+	        //画线条
+	        for (var i = 0; i < 360; i++) {
+	            var value = output[i] / 8;//<===获取数据
+	            cxt.beginPath();
+	            cxt.lineWidth = 2;
+	            cxt.moveTo(300, 300);
+	            //R * cos (PI/180*一次旋转的角度数) ,-R * sin (PI/180*一次旋转的角度数)
+	            cxt.lineTo(Math.cos((i * 1) / 180 * Math.PI) * (200 + value) + 300, (- Math.sin((i * 1) / 180 * Math.PI) * (200 + value) + 300));
+	            cxt.stroke();
+	        }
+	        //画一个小圆，将线条覆盖
+	        cxt.beginPath();
+	        cxt.lineWidth = 1;
+	        cxt.arc(300, 300, 200, 0, 2 * Math.PI, false);
+	        cxt.fillStyle = "#fff";
+	        cxt.stroke();
+	        cxt.fill();
+	        //请求下一帧
+	        requestAnimationFrame(drawSpectrum);
+	    })();
+
 	</script>
    </body>
 </html>
