@@ -1,9 +1,11 @@
+<!-- Welcome to ASOP -->
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js - kinect</title>
+		<title>ASOP</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="manifest" href="video.html">
 		<style>
 			body {
 				font-family: Monospace;
@@ -23,15 +25,24 @@
 			a {
 				color: #0040ff;
 			}
+			#asop {
+				position: absolute;
+				width: 100%;
+				margin-top: 5px;
+				color: #ffffff;
+				font-size: 20px;
+				font-family: monospace;
+				font-weight: bold;
+				text-align: center;
+			}
 		</style>
 	</head>
 	<body>
-
-		<script src="three.min.js"></script>
-
-		<script src='dat.gui.min.js'></script>
-		<script src="stats.min.js"></script>
-		<script src="WebGL.js"></script>
+		<div><p id = "asop"> WELCOME TO ASOP </p></div>
+		<script src="js/three.min.js"></script>
+		<script src='js/dat.gui.min.js'></script>
+		<script src="js/stats.min.js"></script>
+		<script src="js/WebGL.js"></script>
 
 		<script id="vs" type="x-shader/x-vertex">
 			uniform sampler2D map;
@@ -99,8 +110,10 @@
 				video.addEventListener( 'loadedmetadata', function () {
 					texture = new THREE.VideoTexture( video );
 					texture.minFilter = THREE.NearestFilter;
-					var width = 640, height = 480;
-					var nearClipping = 850, farClipping = 4000;
+					// var width = 1280, height = 680;
+					var width = 960, height = 720;
+					// var width = 640, height = 480;
+					var nearClipping = 500, farClipping = 4000;
 					geometry = new THREE.BufferGeometry();
 					var vertices = new Float32Array( width * height * 3 );
 					for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
@@ -115,8 +128,8 @@
 							"height": { value: height },
 							"nearClipping": { value: nearClipping },
 							"farClipping": { value: farClipping },
-							"pointSize": { value: 2 },
-							"zOffset": { value: 1000 }
+							"pointSize": { value: 1 },
+							"zOffset": { value: 700 }
 						},
 						vertexShader: document.getElementById( 'vs' ).textContent,
 						fragmentShader: document.getElementById( 'fs' ).textContent,
@@ -136,9 +149,10 @@
 				video.crossOrigin = 'anonymous';
 				video.loop = true;
 				video.muted = true;
-				video.src = 'kinect.webm';
+				video.src = 'kinect.webm'; //pulpfiction yyss cqsl
 				video.setAttribute( 'webkit-playsinline', 'webkit-playsinline' );
 				video.play();
+				
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
